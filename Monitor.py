@@ -79,7 +79,7 @@ class Monitor(object):
     def downloadPocFile(self):
         for pocScriptUrl in self.__pocScriptUrlList:
             pocScriptCode = self.acquirePocScriptCode(pocScriptUrl)
-            pocScriptSavePath = self.constructSavePathOfPocScript(self, pocScriptUrl)
+            pocScriptSavePath = self.constructSavePathOfPocScript(pocScriptUrl)
             self.savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath)
 
     @staticmethod
@@ -115,5 +115,5 @@ if __name__ == '__main__':
     urlList = Monitor.getPocScriptUrlList(monitor)
     # print(urlList)
     # print(monitor.acquirePocScriptCode("https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py"))
-    pocScriptSavePath1 = monitor.constructSavePathOfPocScript(monitor, "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py")
+    pocScriptSavePath1 = monitor.constructSavePathOfPocScript(monitor)
     print(pocScriptSavePath1)
