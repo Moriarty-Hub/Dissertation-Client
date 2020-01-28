@@ -121,6 +121,6 @@ if __name__ == '__main__':
     # "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py") print(
     # pocScriptSavePath1)
     url = "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/zzcms/zzcms8.2.py"
-    pocScriptCode1 = monitor.acquirePocScriptCode()
-    pocScriptSavePath1 = monitor.constructSavePathOfPocScript()
+    pocScriptCode1 = monitor.acquirePocScriptCode(url)
+    pocScriptSavePath1 = monitor.constructSavePathOfPocScript(url)
     monitor.savePocScriptCodeToSpecifiedPath(pocScriptCode1, pocScriptSavePath1)
