@@ -101,7 +101,7 @@ class Monitor(object):
         pocScript.close()
 
     @staticmethod
-    def splitPocScriptSavePath(pocScriptSavePath):
+    def acquireDirectoryPath(pocScriptSavePath):
         splitIndex = pocScriptSavePath.rfind("/") + 1
         directoryPath = pocScriptSavePath[:splitIndex]
         return directoryPath
