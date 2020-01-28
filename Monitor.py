@@ -44,7 +44,7 @@ class Monitor(object):
 
     def clearPocInfoInDatabase(self):
         deleteStatement = "DELETE FROM " + Constants.POC_INFO_TABLE_NAME
-        self.__DATABASE_CONNECTION.execute(deleteStatement)
+        self.__DATABASE_CURSOR.execute(deleteStatement)
         self.__DATABASE_CONNECTION.commit()
 
     def collectPocInfoFromWebsite(self):
@@ -123,11 +123,5 @@ class Monitor(object):
 
 if __name__ == '__main__':
     monitor = Monitor()
-    Monitor.initializeConstantVariables(monitor)
-    Monitor.collectPocInfoFromWebsite(monitor)
-    Monitor.constructPocScriptUrlList(monitor)
-    urlList = Monitor.getPocScriptUrlList(monitor)
-    url = "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/zzcms/zzcms8.2.py"
-    pocScriptCode1 = monitor.acquirePocScriptCode(url)
-    pocScriptSavePath1 = monitor.constructSavePathOfPocScript(url)
-    monitor.savePocScriptCodeToSpecifiedPath(pocScriptCode1, pocScriptSavePath1)
+    Monitor.initializeConstantVariables()
+    Monitor.updatePocInfo()
