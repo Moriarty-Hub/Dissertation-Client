@@ -94,21 +94,17 @@ class Monitor(object):
         return savePath
 
     def savePocScriptCodeToSpecifiedPath(self, pocScriptCode, pocScriptSavePath):
-        directoryPathAndFileName = self.splitPocScriptSavePath(pocScriptSavePath)
-        self.makeDirectoryIfNotExists(directoryPathAndFileName[0])
-        pocScript = open(directoryPathAndFileName[1], "w")
+        directoryPath = self.acquireDirectoryPath(pocScriptSavePath)
+        self.makeDirectoryIfNotExists(directoryPath)
+        pocScript = open(pocScriptSavePath, "w")
         pocScript.write(pocScriptCode)
         pocScript.close()
 
     @staticmethod
     def splitPocScriptSavePath(pocScriptSavePath):
-        directoryPathAndFileName = []
         splitIndex = pocScriptSavePath.rfind("/") + 1
         directoryPath = pocScriptSavePath[:splitIndex]
-        fileName = pocScriptSavePath[splitIndex:]
-        directoryPathAndFileName.append(directoryPath)
-        directoryPathAndFileName.append(fileName)
-        return directoryPathAndFileName
+        return directoryPath
 
     @staticmethod
     def makeDirectoryIfNotExists(directoryPath):
