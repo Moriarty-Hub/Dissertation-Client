@@ -123,5 +123,5 @@ class Monitor(object):
 
 if __name__ == '__main__':
     monitor = Monitor()
-    Monitor.initializeConstantVariables()
-    Monitor.updatePocInfo()
+    Monitor.initializeConstantVariables(monitor)
+    Monitor.updatePocInfo(monitor)
