@@ -48,8 +48,8 @@ class Monitor(object):
         self.__DATABASE_CONNECTION.commit()
 
     def collectPocInfoFromWebsite(self):
-        serverResponse = requests.get(Constants.RAW_POC_LIST)
-        self.__pocInfoList = json.loads(serverResponse.text)
+        pageSource = requests.get(Constants.RAW_POC_LIST)
+        self.__pocInfoList = json.loads(pageSource.text)
 
     def insertPocInfoIntoDatabase(self):
         insertStatementTemplate = "INSERT INTO %s (%s, %s, %s, %s, %s)"
@@ -77,6 +77,24 @@ class Monitor(object):
             self.__pocScriptUrlList.append(Constants.RAW_POC_SCRIPT_ROOT_PATH + item['filepath'])
 
     def downloadPocFile(self):
+        for pocScriptUrl in self.__pocScriptUrlList:
+            pocScriptCode = self.acquirePocScriptCode(pocScriptUrl)
+            pocScriptSavePath = self.constructSavePathOfPocScript(self, pocScriptUrl)
+            self.savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath)
+
+    @staticmethod
+    def acquirePocScriptCode(pocScriptUrl):
+        pageSource = requests.get(pocScriptUrl)
+        pocScriptCode = pageSource.text
+        return pocScriptCode
+
+    def constructSavePathOfPocScript(self, pocScriptUrl):
+        testStr = self.__ENV_WORKSPACE
+        return ""
+        pass
+
+    @staticmethod
+    def savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath):
         pass
 
     def getPocInfoList(self):
@@ -95,4 +113,5 @@ if __name__ == '__main__':
     Monitor.collectPocInfoFromWebsite(monitor)
     Monitor.constructPocScriptUrlList(monitor)
     urlList = Monitor.getPocScriptUrlList(monitor)
-    print(urlList)
+    # print(urlList)
+    print(monitor.acquirePocScriptCode("https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py"))
