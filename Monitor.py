@@ -89,9 +89,9 @@ class Monitor(object):
         return pocScriptCode
 
     def constructSavePathOfPocScript(self, pocScriptUrl):
-        testStr = self.__ENV_WORKSPACE
-        return ""
-        pass
+        workspacePath = self.__ENV_WORKSPACE
+        savePath = pocScriptUrl.replace(Constants.RAW_POC_SCRIPT_ROOT_PATH, workspacePath)
+        return savePath
 
     @staticmethod
     def savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath):
@@ -114,4 +114,6 @@ if __name__ == '__main__':
     Monitor.constructPocScriptUrlList(monitor)
     urlList = Monitor.getPocScriptUrlList(monitor)
     # print(urlList)
-    print(monitor.acquirePocScriptCode("https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py"))
+    # print(monitor.acquirePocScriptCode("https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py"))
+    pocScriptSavePath1 = monitor.constructSavePathOfPocScript(monitor, "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py")
+    print(pocScriptSavePath1)
