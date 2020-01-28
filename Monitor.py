@@ -93,7 +93,6 @@ class Monitor(object):
         savePath = pocScriptUrl.replace(Constants.RAW_POC_SCRIPT_ROOT_PATH, workspacePath)
         return savePath
 
-    @staticmethod
     def savePocScriptCodeToSpecifiedPath(self, pocScriptCode, pocScriptSavePath):
         directoryPathAndFileName = self.splitPocScriptSavePath(pocScriptSavePath)
         self.makeDirectoryIfNotExists(directoryPathAndFileName[0])
