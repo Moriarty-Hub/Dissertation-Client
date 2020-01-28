@@ -95,7 +95,9 @@ class Monitor(object):
 
     @staticmethod
     def savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath):
-        pass
+        pocScript = open(pocScriptSavePath, "w")
+        pocScript.write(pocScriptCode)
+        pocScript.close()
 
     def getPocInfoList(self):
         return self.__pocInfoList
@@ -113,7 +115,12 @@ if __name__ == '__main__':
     Monitor.collectPocInfoFromWebsite(monitor)
     Monitor.constructPocScriptUrlList(monitor)
     urlList = Monitor.getPocScriptUrlList(monitor)
-    # print(urlList)
-    # print(monitor.acquirePocScriptCode("https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py"))
-    pocScriptSavePath1 = monitor.constructSavePathOfPocScript("https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py")
-    print(pocScriptSavePath1)
+    # print(urlList) print(monitor.acquirePocScriptCode(
+    # "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py"))
+    # pocScriptSavePath1 = monitor.constructSavePathOfPocScript(
+    # "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/typecho/typoecho_install_rce/poc.py") print(
+    # pocScriptSavePath1)
+    url = "https://raw.githubusercontent.com/boy-hack/airbug/master/cms/zzcms/zzcms8.2.py"
+    pocScriptCode1 = monitor.acquirePocScriptCode()
+    pocScriptSavePath1 = monitor.constructSavePathOfPocScript()
+    monitor.savePocScriptCodeToSpecifiedPath(pocScriptCode1, pocScriptSavePath1)
