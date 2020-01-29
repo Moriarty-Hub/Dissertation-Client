@@ -1,19 +1,13 @@
 import unittest
 import os
 
-import Monitor
+import PocInfoUpdater
 import Constants
 
 
-class MonitorTest(unittest.TestCase):
-    def test_initializeConstantVariables(self):
-        self.assertEqual(Constants.ENV_WORKSPACE, None)
-        self.assertEqual(Constants.DATABASE_CONNECTION, None)
-        self.assertEqual(Constants.DATABASE_CURSOR, None)
-        Monitor.initializeConstantVariables()
-        self.assertEqual(Constants.ENV_WORKSPACE, os.getcwd())
-        self.assertNotEqual(Constants.DATABASE_CONNECTION, None)
-        self.assertNotEqual(Constants.DATABASE_CURSOR, None)
+class PocInfoUpdaterTest(unittest.TestCase):
+    def test_initializeEnvironmentVariables(self):
+        pass
 
     def test_updatePocInfo(self):
         pass

@@ -18,20 +18,24 @@ import Constants
 
 # The monitor is consist of two threads, one for listening server's command, the other one for executing
 
-class Monitor(object):
-    __ENV_WORKSPACE = None
+class PocInfoUpdater(object):
+    __WORKSPACE = None
     __DATABASE_CONNECTION = None
     __DATABASE_CURSOR = None
     __POC_SCRIPT_FOLDER_PATH = None
     __pocInfoList = []
     __pocScriptUrlList = []
 
-    def initializeConstantVariables(self):
-        self.__ENV_WORKSPACE = os.getcwd()
+    def execute(self):
+        self.initializeEnvironmentVariables()
+        self.updatePocInfo()
+
+    def initializeEnvironmentVariables(self):
+        self.__WORKSPACE = os.getcwd()
         self.__DATABASE_CONNECTION = pymysql.connect(Constants.DATABASE_URL, Constants.DATABASE_USERNAME,
                                                      Constants.DATABASE_PASSWORD, Constants.DATABASE_NAME)
         self.__DATABASE_CURSOR = self.__DATABASE_CONNECTION.cursor()
-        self.__POC_SCRIPT_FOLDER_PATH = self.__ENV_WORKSPACE + "/" + Constants.POC_SCRIPT_FOLDER_NAME
+        self.__POC_SCRIPT_FOLDER_PATH = self.__WORKSPACE + "/" + Constants.POC_SCRIPT_FOLDER_NAME
 
     def updatePocInfo(self):
         self.updatePocInfoInDatabase()
@@ -52,10 +56,12 @@ class Monitor(object):
         self.__pocInfoList = json.loads(pageSource.text)
 
     def insertPocInfoIntoDatabase(self):
-        insertStatementTemplate = "INSERT INTO %s (%s, %s, %s, %s, %s)"
+        insertStatementTemplate = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\")"
         for pocItem in self.__pocInfoList:
             insertStatement = insertStatementTemplate % (
-                Constants.POC_INFO_TABLE_NAME, pocItem[Constants.POC_INFO_TABLE_FIELDS[1]],
+                Constants.POC_INFO_TABLE_NAME, Constants.POC_INFO_TABLE_FIELDS[1], Constants.POC_INFO_TABLE_FIELDS[2],
+                Constants.POC_INFO_TABLE_FIELDS[3], Constants.POC_INFO_TABLE_FIELDS[4],
+                Constants.POC_INFO_TABLE_FIELDS[5], pocItem[Constants.POC_INFO_TABLE_FIELDS[1]],
                 pocItem[Constants.POC_INFO_TABLE_FIELDS[2]], pocItem[Constants.POC_INFO_TABLE_FIELDS[3]],
                 pocItem[Constants.POC_INFO_TABLE_FIELDS[4]], pocItem[Constants.POC_INFO_TABLE_FIELDS[5]])
             self.__DATABASE_CURSOR.execute(insertStatement)
@@ -89,7 +95,7 @@ class Monitor(object):
         return pocScriptCode
 
     def constructSavePathOfPocScript(self, pocScriptUrl):
-        workspacePath = self.__ENV_WORKSPACE
+        workspacePath = self.__WORKSPACE
         savePath = pocScriptUrl.replace(Constants.RAW_POC_SCRIPT_ROOT_PATH, workspacePath)
         return savePath
 
@@ -122,6 +128,5 @@ class Monitor(object):
 
 
 if __name__ == '__main__':
-    monitor = Monitor()
-    Monitor.initializeConstantVariables(monitor)
-    Monitor.updatePocInfo(monitor)
+    pocInfoUpdater = PocInfoUpdater()
+    PocInfoUpdater.execute(pocInfoUpdater)
