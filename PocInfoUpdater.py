@@ -61,9 +61,10 @@ class PocInfoUpdater(object):
             insertStatement = insertStatementTemplate % (
                 Constants.POC_INFO_TABLE_NAME, Constants.POC_INFO_TABLE_FIELDS[1], Constants.POC_INFO_TABLE_FIELDS[2],
                 Constants.POC_INFO_TABLE_FIELDS[3], Constants.POC_INFO_TABLE_FIELDS[4],
-                Constants.POC_INFO_TABLE_FIELDS[5], pocItem[Constants.POC_INFO_TABLE_FIELDS[1]],
-                pocItem[Constants.POC_INFO_TABLE_FIELDS[2]], pocItem[Constants.POC_INFO_TABLE_FIELDS[3]],
-                pocItem[Constants.POC_INFO_TABLE_FIELDS[4]], pocItem[Constants.POC_INFO_TABLE_FIELDS[5]])
+                Constants.POC_INFO_TABLE_FIELDS[5], pocItem[Constants.RAW_POC_LIST_KEYS[0]],
+                pocItem[Constants.RAW_POC_LIST_KEYS[1]], pocItem[Constants.RAW_POC_LIST_KEYS[2]],
+                pocItem[Constants.RAW_POC_LIST_KEYS[3]],
+                Constants.RAW_POC_SCRIPT_ROOT_PATH + pocItem[Constants.RAW_POC_LIST_KEYS[2]])
             self.__DATABASE_CURSOR.execute(insertStatement)
             # The performance may be better if this statement was put out of the for-loop, but not sure if there is any
             # error occurs.
