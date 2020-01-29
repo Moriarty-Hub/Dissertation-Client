@@ -76,7 +76,7 @@ class PocInfoUpdater(object):
         self.downloadPocFile()
 
     def removeLocalPocFile(self):
-        shutil.rmtree(self.__POC_SCRIPT_FOLDER_PATH)
+        shutil.rmtree(path=self.__POC_SCRIPT_FOLDER_PATH, ignore_errors=True)
         os.mkdir(self.__POC_SCRIPT_FOLDER_PATH)
 
     def constructPocScriptUrlList(self):
