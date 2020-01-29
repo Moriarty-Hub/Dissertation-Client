@@ -97,7 +97,8 @@ class PocInfoUpdater(object):
 
     def constructSavePathOfPocScript(self, pocScriptUrl):
         workspacePath = self.__WORKSPACE
-        savePath = pocScriptUrl.replace(Constants.RAW_POC_SCRIPT_ROOT_PATH, workspacePath)
+        savePath = pocScriptUrl.replace(Constants.RAW_POC_SCRIPT_ROOT_PATH, workspacePath) + \
+                   "/" + Constants.POC_SCRIPT_FOLDER_NAME + "/"
         return savePath
 
     def savePocScriptCodeToSpecifiedPath(self, pocScriptCode, pocScriptSavePath):
