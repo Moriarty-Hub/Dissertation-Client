@@ -1,3 +1,6 @@
+# NOTICE
+# You need to install HackRequest and scapy module before running this script
+
 import os
 import pymysql
 
