@@ -1,7 +1,6 @@
 import os
 import pymysql
 
-
 import airbug
 import Constants
 
@@ -34,7 +33,7 @@ class Scanner(object):
         selectStatement = selectStatementTemplate % (Constants.POC_INFO_TABLE_FIELDS[1],
                                                      Constants.POC_INFO_TABLE_FIELDS[2],
                                                      Constants.POC_INFO_TABLE_FIELDS[3],
-                                                     Constants.POC_SCRIPT_FOLDER_NAME)
+                                                     Constants.POC_INFO_TABLE_NAME)
         self.__DATABASE_CURSOR.execute(selectStatement)
         results = self.__DATABASE_CURSOR.fetchall()
         for row in results:
@@ -63,3 +62,8 @@ class Scanner(object):
             for result in resultList:
                 print(result)
             print("======================================")
+
+
+if __name__ == "__main__":
+    scanner = Scanner(["https://x.hacking8.com"], ["47.98.53.171"])
+    scanner.execute()
