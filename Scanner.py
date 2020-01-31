@@ -1,29 +1,9 @@
 import os
 import pymysql
-from abc import ABC
-from importlib.abc import Loader
 
+
+import airbug
 import Constants
-
-
-class PocLoader(Loader, ABC):
-    __pocName = None
-    __pocPath = None
-    __pocSourceCode = None
-
-    def __init__(self, pocName, pocPath):
-        self.__pocName = pocName
-        self.__pocPath = pocPath
-        self.__acquirePocSourceCode()
-
-    def __acquirePocSourceCode(self):
-        pocFile = open(self.__pocPath)
-        self.__pocSourceCode = pocFile.read()
-        pocFile.close()
-
-    def executePocScript(self, module):
-        objectCode = compile(self.__pocSourceCode, self.__pocName, mode='exec', dont_inherit=True)
-        exec(objectCode, module.__dict__)
 
 
 class Scanner(object):
@@ -39,8 +19,6 @@ class Scanner(object):
                                          "coremail", "rails", "www_common"]
     __nameListOfPocScriptForHostTarget = ["wordpress", "thinkphp", "dedecms", "hardware", "ftp", "weblogic", "tomcat",
                                           "phpstudy", "php", "smtp", "hfs", "windows", "zabbix", ""]
-    __summaryListOfUrlTargets = []
-    __summaryListOfHostTargets = []
 
     def __init__(self, urlTargetsList, hostTargetsList):
         self.__WORKSPACE = os.getcwd()
@@ -64,31 +42,24 @@ class Scanner(object):
                                                Constants.POC_SCRIPT_FOLDER_NAME + row[2]])
 
     def execute(self):
-        self.__scanUrlTargets()
-        self.__scanHostTargets()
-        self.__generateSummary()
+        self.__scanTargets("url")
+        self.__scanTargets("host")
 
-    def __scanUrlTargets(self):
-        pocScriptRecordListForUrlTarget = self.__filterOutPocScriptRecordForSpecifiedTarget("url")
-        for record in pocScriptRecordListForUrlTarget:
-            pocLoader = PocLoader(record[0])
-
-    def __scanHostTargets(self):
-        pocScriptRecordListForHostTarget = self.__filterOutPocScriptRecordForSpecifiedTarget("host")
-
-    def __filterOutPocScriptRecordForSpecifiedTarget(self, targetType):
+    def __scanTargets(self, targetType):
         if targetType == "url":
-            pocScriptRecordListForUrlTarget = []
-            for pocRecord in self.__pocScriptRecordList:
-                if pocRecord[0] in self.__nameListOfPocScriptForUrlTarget:
-                    pocScriptRecordListForUrlTarget.append(pocRecord)
-            return pocScriptRecordListForUrlTarget
+            targetList = self.__urlTargetsList
+            keywordList = self.__nameListOfPocScriptForUrlTarget
         else:
-            pocScriptRecordListForHostTarget = []
-            for pocRecord in self.__pocScriptRecordList:
-                if pocRecord[0] in self.__nameListOfPocScriptForHostTarget:
-                    pocScriptRecordListForHostTarget.append(pocRecord)
-            return pocScriptRecordListForHostTarget
-
-    def __generateSummary(self):
-        pass
+            targetList = self.__hostTargetsList
+            keywordList = self.__nameListOfPocScriptForHostTarget
+        for target in targetList:
+            resultList = []
+            result = airbug.run_airbug(target, keywordList)
+            if result:
+                resultList.append(result)
+            else:
+                print("No issue was detected.")
+            print("Report for " + target)
+            for result in resultList:
+                print(result)
+            print("======================================")
