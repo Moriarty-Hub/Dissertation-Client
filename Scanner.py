@@ -52,8 +52,7 @@ class Scanner(object):
             result = airbug.run_airbug(target, keywordList)
             if result:
                 print("Issue was detected on target " + target)
-                result = self.__DATABASE_CONNECTION.escape(str(result))
-                self.__resultOfSingleTarget = {"name": target, "target_type": targetType, "description": result}
+                self.__resultOfSingleTarget = {"name": target, "target_type": targetType, "description": str(result)}
                 self.__saveResultOfSingleTargetIntoDatabase()
 
     def __saveResultOfSingleTargetIntoDatabase(self):
@@ -64,7 +63,7 @@ class Scanner(object):
                                                      Constants.SCAN_RESULT_TABLE_FIELDS[2],
                                                      self.__resultOfSingleTarget["name"],
                                                      self.__resultOfSingleTarget["target_type"],
-                                                     self.__resultOfSingleTarget["description"])
+                                                     pymysql.escape_string(self.__resultOfSingleTarget["description"]))
         self.__DATABASE_CURSOR.execute(insertStatement)
 
     def __commitModificationToDatabase(self):
