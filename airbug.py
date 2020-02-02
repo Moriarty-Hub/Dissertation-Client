@@ -10,7 +10,9 @@ from concurrent import futures
 from importlib import util
 from importlib.abc import Loader
 import HackRequests
+import pymysql
 
+import Constants
 
 WEB_REPOSITORY = "https://github.com/boy-hack/airbug"
 HACK = HackRequests.hackRequests()
@@ -66,22 +68,35 @@ class PocLoader(Loader, ABC):
         exec(obj, module.__dict__)
 
 
-def load_remote_poc():
-    middle = "/master"
-    suffix = "/API.json"
-    prefix = WEB_REPOSITORY.replace("github.com", "raw.githubusercontent.com")
-    _api = prefix + middle + suffix
-    hh = HACK.http(_api)
-    data = json.loads(hh.text(), encoding='utf-8')
-    for _ in data:
-        _["webfile"] = prefix + middle + _["filepath"]
-    return data
+def load_poc_info_from_database():
+    databaseConnection = pymysql.connect(Constants.DATABASE_URL, Constants.DATABASE_USERNAME,
+                                         Constants.DATABASE_PASSWORD, Constants.DATABASE_NAME)
+    databaseCursor = databaseConnection.cursor()
+    selectStatementTemplate = "SELECT %s, %s, %s, %s, %s FROM %s"
+    selectStatement = selectStatementTemplate % (Constants.POC_INFO_TABLE_FIELDS[0],
+                                                 Constants.POC_INFO_TABLE_FIELDS[1],
+                                                 Constants.POC_INFO_TABLE_FIELDS[2],
+                                                 Constants.POC_INFO_TABLE_FIELDS[3],
+                                                 Constants.POC_INFO_TABLE_FIELDS[4],
+                                                 Constants.POC_INFO_TABLE_NAME)
+    databaseCursor.execute(selectStatement)
+    results = databaseCursor.fetchall()
+    pocInfoList = []
+    for row in results:
+        name = row[0]
+        type1 = row[1]
+        filepath = row[2]
+        time = row[3]
+        webFile = row[4]
+        data = {"name": name, "type": type1, "filepath": filepath, "time": time, "webfile": webFile}
+        pocInfoList.append(data)
+    return pocInfoList
 
 
 def run_airbug(target: str, keywords: list):
     PocQueue = []
     print("load poc from airbug repository")
-    pocs = load_remote_poc()
+    pocs = load_poc_info_from_database()
     for poc in pocs:
         for keyword in keywords:
             if keyword.lower() in poc["name"].lower():
@@ -110,7 +125,7 @@ def run_airbug(target: str, keywords: list):
             print("load poc error:{} error:{}".format(target, str(e)))
         if ret:
             collector.append(ret)
-    print("over.")
+    print("Finished")
     return collector
 
 

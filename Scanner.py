@@ -4,7 +4,8 @@
 import os
 import pymysql
 
-from Client import Constants, airbug
+import Constants
+import airbug
 
 
 class Scanner(object):
@@ -14,6 +15,7 @@ class Scanner(object):
     __urlTargetsList = None
     __hostTargetsList = None
     __pocScriptRecordList = []
+    __resultOfSingleTarget = []
     __nameListOfPocScriptForUrlTarget = ["typecho", "zzcms", "phpcms", "metinfo", "pbootcms", "ecshop", "emlog",
                                          "siteserver", "beescms", "discuz", "empirecms", "weblogic", "grafana",
                                          "phpstudy", "phpcms", "thinkphp", "hfs", "axis", "confluence", "iis",

@@ -4,7 +4,7 @@ import pymysql
 import requests
 import shutil
 
-from Client import Constants
+import Constants
 
 
 class PocInfoUpdater(object):
