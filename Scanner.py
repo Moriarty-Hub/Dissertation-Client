@@ -52,6 +52,7 @@ class Scanner(object):
             result = airbug.run_airbug(target, keywordList)
             if result:
                 print("Issue was detected on target " + target)
+                result = self.__DATABASE_CONNECTION.escape(result)
                 self.__resultOfSingleTarget = {"name": target, "target_type": targetType, "description": result}
                 self.__saveResultOfSingleTargetIntoDatabase()
 
