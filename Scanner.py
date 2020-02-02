@@ -56,7 +56,7 @@ class Scanner(object):
                 self.__saveResultOfSingleTargetIntoDatabase()
 
     def __saveResultOfSingleTargetIntoDatabase(self):
-        insertStatementTemplate = "INSERT INTO %s (%s, %s, %s) VALUES (%s, %s, %s)"
+        insertStatementTemplate = "INSERT INTO %s (%s, %s, %s) VALUES (\"%s\", \"%s\", \"%s\")"
         insertStatement = insertStatementTemplate % (Constants.SCAN_RESULT_TABLE_NAME,
                                                      Constants.SCAN_RESULT_TABLE_FIELDS[0],
                                                      Constants.SCAN_RESULT_TABLE_FIELDS[1],
