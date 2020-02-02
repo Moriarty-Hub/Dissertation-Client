@@ -129,7 +129,6 @@ def run_airbug(target: str, keywords: list):
     return collector
 
 
-"""
 def main():
     target = ''
     keywords = []
@@ -157,4 +156,3 @@ def main():
 
 
 main()
-"""
