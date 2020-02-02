@@ -4,8 +4,7 @@
 import os
 import pymysql
 
-import airbug
-import Constants
+from Client import Constants, airbug
 
 
 class Scanner(object):
