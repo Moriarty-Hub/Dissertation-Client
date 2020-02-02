@@ -95,7 +95,7 @@ def load_poc_info_from_database():
 
 def run_airbug(target: str, keywords: list):
     PocQueue = []
-    print("load poc from airbug repository")
+    print("Loading poc information from database")
     pocs = load_poc_info_from_database()
     for poc in pocs:
         for keyword in keywords:
@@ -128,7 +128,7 @@ def run_airbug(target: str, keywords: list):
     print("Finished")
     return collector
 
-
+"""
 def main():
     target = ''
     keywords = []
@@ -156,3 +156,4 @@ def main():
 
 
 main()
+"""

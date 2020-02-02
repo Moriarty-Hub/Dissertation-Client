@@ -115,4 +115,5 @@ class PocInfoUpdater(object):
             os.makedirs(directoryPath)
 
     def __releaseResources(self):
+        self.__DATABASE_CURSOR.close()
         self.__DATABASE_CONNECTION.close()

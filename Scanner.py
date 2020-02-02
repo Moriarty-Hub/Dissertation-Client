@@ -14,7 +14,6 @@ class Scanner(object):
     __DATABASE_CURSOR = None
     __urlTargetsList = None
     __hostTargetsList = None
-    __pocScriptRecordList = []
     __resultOfSingleTarget = []
     __nameListOfPocScriptForUrlTarget = ["typecho", "zzcms", "phpcms", "metinfo", "pbootcms", "ecshop", "emlog",
                                          "siteserver", "beescms", "discuz", "empirecms", "weblogic", "grafana",
@@ -30,23 +29,17 @@ class Scanner(object):
         self.__DATABASE_CURSOR = self.__DATABASE_CONNECTION.cursor()
         self.__urlTargetsList = urlTargetsList
         self.__hostTargetsList = hostTargetsList
-        self.__acquireAllPocScriptPathFromDatabase()
-
-    def __acquireAllPocScriptPathFromDatabase(self):
-        selectStatementTemplate = "SELECT %s, %s, %s FROM %s"
-        selectStatement = selectStatementTemplate % (Constants.POC_INFO_TABLE_FIELDS[1],
-                                                     Constants.POC_INFO_TABLE_FIELDS[2],
-                                                     Constants.POC_INFO_TABLE_FIELDS[3],
-                                                     Constants.POC_INFO_TABLE_NAME)
-        self.__DATABASE_CURSOR.execute(selectStatement)
-        results = self.__DATABASE_CURSOR.fetchall()
-        for row in results:
-            self.__pocScriptRecordList.append([row[0], row[1], self.__WORKSPACE + "/" +
-                                               Constants.POC_SCRIPT_FOLDER_NAME + row[2]])
 
     def execute(self):
+        self.__clearDatabaseContent()
         self.__scanTargets("url")
         self.__scanTargets("host")
+        self.__commitModificationToDatabase()
+        self.__releaseResources()
+
+    def __clearDatabaseContent(self):
+        deleteStatement = "DELETE FROM " + Constants.SCAN_RESULT_TABLE_NAME
+        self.__DATABASE_CURSOR.execute(deleteStatement)
 
     def __scanTargets(self, targetType):
         if targetType == "url":
@@ -56,16 +49,29 @@ class Scanner(object):
             targetList = self.__hostTargetsList
             keywordList = self.__nameListOfPocScriptForHostTarget
         for target in targetList:
-            resultList = []
             result = airbug.run_airbug(target, keywordList)
             if result:
-                resultList.append(result)
-            else:
-                print("No issue was detected.")
-            print("Report for " + target)
-            for result in resultList:
-                print(result)
-            print("======================================")
+                print("Issue was detected on target " + target)
+                self.__resultOfSingleTarget = {"name": target, "target_type": targetType, "description": result}
+                self.__saveResultOfSingleTargetIntoDatabase()
+
+    def __saveResultOfSingleTargetIntoDatabase(self):
+        insertStatementTemplate = "INSERT INTO %s (%s, %s, %s) VALUES (%s, %s, %s)"
+        insertStatement = insertStatementTemplate % (Constants.SCAN_RESULT_TABLE_NAME,
+                                                     Constants.SCAN_RESULT_TABLE_FIELDS[0],
+                                                     Constants.SCAN_RESULT_TABLE_FIELDS[1],
+                                                     Constants.SCAN_RESULT_TABLE_FIELDS[2],
+                                                     self.__resultOfSingleTarget["name"],
+                                                     self.__resultOfSingleTarget["target_type"],
+                                                     self.__resultOfSingleTarget["description"])
+        self.__DATABASE_CURSOR.execute(insertStatement)
+
+    def __commitModificationToDatabase(self):
+        self.__DATABASE_CONNECTION.commit()
+
+    def __releaseResources(self):
+        self.__DATABASE_CURSOR.close()
+        self.__DATABASE_CONNECTION.close()
 
 
 if __name__ == "__main__":
