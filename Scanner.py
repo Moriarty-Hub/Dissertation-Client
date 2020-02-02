@@ -61,7 +61,7 @@ class Scanner(object):
                                                      Constants.SCAN_RESULT_TABLE_FIELDS[0],
                                                      Constants.SCAN_RESULT_TABLE_FIELDS[1],
                                                      Constants.SCAN_RESULT_TABLE_FIELDS[2],
-                                                     self.__resultOfSingleTarget["name"],
+                                                     pymysql.escape_string(self.__resultOfSingleTarget["name"]),
                                                      self.__resultOfSingleTarget["target_type"],
                                                      pymysql.escape_string(self.__resultOfSingleTarget["description"]))
         self.__DATABASE_CURSOR.execute(insertStatement)
