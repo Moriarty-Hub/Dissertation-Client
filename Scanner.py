@@ -32,6 +32,7 @@ class Scanner(object):
 
     def execute(self):
         self.__clearDatabaseContent()
+        self.__commitModificationToDatabase()
         self.__scanTargets("url")
         self.__scanTargets("host")
         self.__commitModificationToDatabase()
