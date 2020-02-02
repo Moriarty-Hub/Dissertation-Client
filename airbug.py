@@ -73,11 +73,11 @@ def load_poc_info_from_database():
                                          Constants.DATABASE_PASSWORD, Constants.DATABASE_NAME)
     databaseCursor = databaseConnection.cursor()
     selectStatementTemplate = "SELECT %s, %s, %s, %s, %s FROM %s"
-    selectStatement = selectStatementTemplate % (Constants.POC_INFO_TABLE_FIELDS[0],
-                                                 Constants.POC_INFO_TABLE_FIELDS[1],
+    selectStatement = selectStatementTemplate % (Constants.POC_INFO_TABLE_FIELDS[1],
                                                  Constants.POC_INFO_TABLE_FIELDS[2],
                                                  Constants.POC_INFO_TABLE_FIELDS[3],
                                                  Constants.POC_INFO_TABLE_FIELDS[4],
+                                                 Constants.POC_INFO_TABLE_FIELDS[5],
                                                  Constants.POC_INFO_TABLE_NAME)
     databaseCursor.execute(selectStatement)
     results = databaseCursor.fetchall()
