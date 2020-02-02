@@ -68,5 +68,5 @@ class Scanner(object):
 
 
 if __name__ == "__main__":
-    scanner = Scanner(["https://x.hacking8.com"], ["47.98.53.171"])
+    scanner = Scanner(["https://x.hacking8.com", "http://45.32.224.205:8080/"], ["47.98.53.171"])
     scanner.execute()
