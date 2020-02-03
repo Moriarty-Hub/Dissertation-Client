@@ -18,7 +18,7 @@ class Scanner(object):
     __nameListOfPocScriptForUrlTarget = ["typecho", "zzcms", "phpcms", "metinfo", "pbootcms", "ecshop", "emlog",
                                          "siteserver", "beescms", "discuz", "empirecms", "weblogic", "grafana",
                                          "phpstudy", "phpcms", "thinkphp", "hfs", "axis", "confluence", "iis",
-                                         "coremail", "rails", "www_common"]
+                                         "coremail", "rails", "www_common", "tomcat"]
     __nameListOfPocScriptForHostTarget = ["wordpress", "thinkphp", "dedecms", "ftp", "weblogic", "tomcat",
                                           "phpstudy", "php", "smtp", "hfs", "windows", "zabbix", ""]
 
@@ -32,7 +32,6 @@ class Scanner(object):
 
     def execute(self):
         self.__clearDatabaseContent()
-        self.__commitModificationToDatabase()
         self.__scanTargets("url")
         self.__scanTargets("host")
         self.__commitModificationToDatabase()
