@@ -82,7 +82,8 @@ class Scanner(object):
         moduleNameList = []
         for pocInfo in self.__POC_INFO_LIST:
             if pocInfo["name"] == keyword:
-                moduleName = (Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"]).rstrip('.py').replace("/", ".")
+                moduleName = (Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"]).rstrip('.py')\
+                    .replace(".", "\\.").replace("/", ".")
                 moduleNameList.append(moduleName)
         return moduleNameList
 
