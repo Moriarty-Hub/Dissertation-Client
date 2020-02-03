@@ -19,7 +19,7 @@ class Scanner(object):
                                          "siteserver", "beescms", "discuz", "empirecms", "weblogic", "grafana",
                                          "phpstudy", "phpcms", "thinkphp", "hfs", "axis", "confluence", "iis",
                                          "coremail", "rails", "www_common"]
-    __nameListOfPocScriptForHostTarget = ["wordpress", "thinkphp", "dedecms", "hardware", "ftp", "weblogic", "tomcat",
+    __nameListOfPocScriptForHostTarget = ["wordpress", "thinkphp", "dedecms", "ftp", "weblogic", "tomcat",
                                           "phpstudy", "php", "smtp", "hfs", "windows", "zabbix", ""]
 
     def __init__(self, urlTargetsList, hostTargetsList):
