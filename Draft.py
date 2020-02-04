@@ -8,5 +8,5 @@ def __replaceDotInFileNameToUnderline(string):
 
 
 if __name__ == '__main__':
-    fileName = __replaceDotInFileNameToUnderline("/cms/thinkphp/thinkphp_3.1_code_exec.py")
+    fileName = __replaceDotInFileNameToUnderline("poc_script/system/php/expose_php.py")
     print(fileName)
