@@ -56,11 +56,13 @@ class PocInfoUpdater(object):
         for pocItem in self.__pocInfoList:
             insertStatement = insertStatementTemplate % (
                 Constants.POC_INFO_TABLE_NAME,
-                Constants.POC_INFO_TABLE_FIELDS[1], Constants.POC_INFO_TABLE_FIELDS[2],
+                Constants.POC_INFO_TABLE_FIELDS[1],
+                self.__replaceDotInFileNameToUnderscore(Constants.POC_INFO_TABLE_FIELDS[2]),
                 Constants.POC_INFO_TABLE_FIELDS[3], Constants.POC_INFO_TABLE_FIELDS[4],
                 Constants.POC_INFO_TABLE_FIELDS[5],
                 pocItem[Constants.RAW_POC_LIST_KEYS[0]], pocItem[Constants.RAW_POC_LIST_KEYS[1]],
-                pocItem[Constants.RAW_POC_LIST_KEYS[2]], pocItem[Constants.RAW_POC_LIST_KEYS[3]],
+                self.__replaceDotInFileNameToUnderscore(pocItem[Constants.RAW_POC_LIST_KEYS[2]]),
+                pocItem[Constants.RAW_POC_LIST_KEYS[3]],
                 Constants.RAW_POC_SCRIPT_ROOT_PATH + pocItem[Constants.RAW_POC_LIST_KEYS[2]])
             self.__DATABASE_CURSOR.execute(insertStatement)
         self.__DATABASE_CONNECTION.commit()
@@ -81,7 +83,7 @@ class PocInfoUpdater(object):
     def __downloadPocFile(self):
         for pocScriptUrl in self.__pocScriptUrlList:
             pocScriptCode = self.__acquirePocScriptCode(pocScriptUrl)
-            pocScriptSavePath = self.__constructSavePathOfPocScript(pocScriptUrl)
+            pocScriptSavePath = self.__replaceDotInFileNameToUnderscore(self.__constructSavePathOfPocScript(pocScriptUrl))
             self.__savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath)
 
     @staticmethod
@@ -117,3 +119,12 @@ class PocInfoUpdater(object):
     def __releaseResources(self):
         self.__DATABASE_CURSOR.close()
         self.__DATABASE_CONNECTION.close()
+
+    @staticmethod
+    def __replaceDotInFileNameToUnderscore(string):
+        prefix = string[:string.rfind("/")]
+        suffix = string[string.rfind("."):]
+        fileName = string[string.rfind("/"):string.rfind(".")]
+        fileName = fileName.replace(".", "_")
+        finalFileName = prefix + fileName + suffix
+        return finalFileName

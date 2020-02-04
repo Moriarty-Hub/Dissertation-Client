@@ -74,15 +74,19 @@ class Scanner(object):
             moduleNameList = self.__acquireModuleNameOfSpecifiedKeyword(keyword)
             for moduleName in moduleNameList:
                 module = importlib.import_module(moduleName)
-                result = module.poc(target)
-                resultList.append(result)
+                try:
+                    result = module.poc(target)
+                    if result:
+                        resultList.append(result)
+                except:
+                    pass
         return resultList
 
     def __acquireModuleNameOfSpecifiedKeyword(self, keyword):
         moduleNameList = []
         for pocInfo in self.__POC_INFO_LIST:
             if pocInfo["name"] == keyword:
-                moduleName = (Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"]).rstrip('.py')\
+                moduleName = (Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"]).rstrip('.py') \
                     .replace(".", "\\.").replace("/", ".")
                 moduleNameList.append(moduleName)
         return moduleNameList
