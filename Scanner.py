@@ -98,7 +98,7 @@ class Scanner(object):
                                                          Constants.SCAN_RESULT_TABLE_FIELDS[0],
                                                          Constants.SCAN_RESULT_TABLE_FIELDS[1],
                                                          Constants.SCAN_RESULT_TABLE_FIELDS[2],
-                                                         target, targetType, pymysql.escape_string(result))
+                                                         target, targetType, pymysql.escape_string(str(result)))
             self.__DATABASE_CURSOR.execute(insertStatement)
 
     def __commitModificationToDatabase(self):
