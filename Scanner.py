@@ -86,9 +86,14 @@ class Scanner(object):
         moduleNameList = []
         for pocInfo in self.__POC_INFO_LIST:
             if pocInfo["name"] == keyword:
-                moduleName = (Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"])[:-3].replace("/", ".")
+                moduleName = self.__stripTheSuffixOfPythonFile(Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"])\
+                    .replace("/", ".")
                 moduleNameList.append(moduleName)
         return moduleNameList
+
+    @staticmethod
+    def __stripTheSuffixOfPythonFile(fileName):
+        return fileName[:-3]
 
     def __saveResultListOfSingleTargetIntoDatabase(self, target, targetType, resultList):
         for result in resultList:
