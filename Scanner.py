@@ -48,11 +48,30 @@ class Scanner(object):
         return pocInfoList
 
     def execute(self):
+        self.__deleteInactiveUrlFromUrlList()
+        self.__deleteInactiveHostFromHostList()
         self.__clearDatabaseContent()
         self.__scanTargetsOfSpecifiedType("url")
         self.__scanTargetsOfSpecifiedType("host")
         self.__commitModificationToDatabase()
         self.__releaseResources()
+
+    def __deleteInactiveUrlFromUrlList(self):
+        self.__deleteInactiveTargetFromTargetList(self.__urlTargetsList)
+
+    def __deleteInactiveHostFromHostList(self):
+        self.__deleteInactiveTargetFromTargetList(self.__hostTargetsList)
+
+    @staticmethod
+    def __deleteInactiveTargetFromTargetList(targetList):
+        targetListCopy = list(targetList)
+        for target in targetListCopy:
+            os.system("ping -w 4 %s | tail -n 2 | head -n 1 > pingResult.txt" % target)
+            file = open("pingResult.txt")
+            result = file.read()
+            file.close()
+            if "0 received, 100% packet loss" in result:
+                targetList.remove(target)
 
     def __clearDatabaseContent(self):
         deleteStatement = "DELETE FROM " + Constants.SCAN_RESULT_TABLE_NAME
