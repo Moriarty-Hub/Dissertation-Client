@@ -1,29 +1,31 @@
+import pymysql
+
 import Constants
 
 
-def __replaceDotInFileNameToUnderline(string):
-    prefix = string[:string.rfind("/")]
-    suffix = string[string.rfind("."):]
-    fileName = string[string.rfind("/"):string.rfind(".")]
-    fileName = fileName.replace(".", "_")
-    finalFileName = prefix + fileName + suffix
-    return finalFileName
-
-
-def __acquireModuleNameOfSpecifiedKeyword(keyword):
-    moduleNameList = []
-    for pocInfo in [{"name": "php", "type": "system", "file_path": "/system/php/expose_php.py",
-                     "create_time": "2018-10-03 00:00:49",
-                     "url": "https://raw.githubusercontent.com/Moriarty-Hub/airbug/master/system/php/expose_php.py"}]:
-        if pocInfo["name"] == keyword:
-            moduleName = (Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"]).rstrip('.py') \
-                .replace("/", ".")
-            moduleNameList.append(moduleName)
-    return moduleNameList
+def fillTargetList(urlTargetList, hostTargetList):
+    connection = pymysql.connect(Constants.DATABASE_URL, Constants.DATABASE_USERNAME, Constants.DATABASE_PASSWORD,
+                                 Constants.DATABASE_NAME)
+    cursor = connection.cursor()
+    selectStatementTemplate = "SELECT %s, %s FROM %s"
+    selectStatement = selectStatementTemplate % (Constants.TARGET_TABLE_FIELDS[1], Constants.TARGET_TABLE_FIELDS[2],
+                                                 Constants.TARGET_TABLE_NAME)
+    cursor.execute(selectStatement)
+    result = cursor.fetchall()
+    for row in result:
+        if row[1] == "url":
+            urlTargetList.append(row[0])
+        else:
+            hostTargetList.append(row[0])
 
 
 if __name__ == '__main__':
-    """fileName = __replaceDotInFileNameToUnderline("poc_script/system/php/expose_php.py")
-    print(fileName)"""
-    print(__acquireModuleNameOfSpecifiedKeyword("php"))
-    print("/system/php/expose_php.py"[:-3])
+    urlTarget = []
+    hostTarget = []
+    fillTargetList(urlTarget, hostTarget)
+    print("---URL---")
+    for item in urlTarget:
+        print(item)
+    print("---HOST---")
+    for item in hostTarget:
+        print(item)

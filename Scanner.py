@@ -97,7 +97,7 @@ class Scanner(object):
         moduleNameList = []
         for pocInfo in self.__POC_INFO_LIST:
             if pocInfo["name"] == keyword:
-                moduleName = self.__stripTheSuffixOfPythonFile(Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"])\
+                moduleName = self.__stripTheSuffixOfPythonFile(Constants.POC_SCRIPT_FOLDER_NAME + pocInfo["file_path"]) \
                     .replace("/", ".")
                 moduleNameList.append(moduleName)
         return moduleNameList
@@ -124,6 +124,25 @@ class Scanner(object):
         self.__DATABASE_CONNECTION.close()
 
 
+def fillTargetList(urlTargetList, hostTargetList):
+    connection = pymysql.connect(Constants.DATABASE_URL, Constants.DATABASE_USERNAME, Constants.DATABASE_PASSWORD,
+                                 Constants.DATABASE_NAME)
+    cursor = connection.cursor()
+    selectStatementTemplate = "SELECT %s, %s FROM %s"
+    selectStatement = selectStatementTemplate % (Constants.TARGET_TABLE_FIELDS[1], Constants.TARGET_TABLE_FIELDS[2],
+                                                 Constants.TARGET_TABLE_NAME)
+    cursor.execute(selectStatement)
+    result = cursor.fetchall()
+    for row in result:
+        if row[1] == "url":
+            urlTargetList.append(row[0])
+        else:
+            hostTargetList.append(row[0])
+
+
 if __name__ == "__main__":
-    scanner = Scanner(["https://x.hacking8.com", "http://45.32.224.205:8080"], ["47.98.53.171"])
+    urlList = []
+    hostList = []
+    fillTargetList(urlList, hostList)
+    scanner = Scanner(urlList, hostList)
     scanner.execute()

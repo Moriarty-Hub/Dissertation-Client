@@ -8,5 +8,7 @@ POC_INFO_TABLE_NAME = "poc_info"
 POC_INFO_TABLE_FIELDS = ["id", "name", "type", "file_path", "create_time", "url"]
 SCAN_RESULT_TABLE_NAME = "scan_result"
 SCAN_RESULT_TABLE_FIELDS = ["target", "target_type", "description"]
+TARGET_TABLE_NAME = "target"
+TARGET_TABLE_FIELDS = ["id", "target", "type"]
 POC_SCRIPT_FOLDER_NAME = "poc_script"
 RAW_POC_SCRIPT_ROOT_PATH = "https://raw.githubusercontent.com/Moriarty-Hub/airbug/master"
