@@ -83,7 +83,8 @@ class PocInfoUpdater(object):
     def __downloadPocFile(self):
         for pocScriptUrl in self.__pocScriptUrlList:
             pocScriptCode = self.__acquirePocScriptCode(pocScriptUrl)
-            pocScriptSavePath = self.__replaceDotInFileNameToUnderscore(self.__constructSavePathOfPocScript(pocScriptUrl))
+            pocScriptSavePath = self.__replaceDotInFileNameToUnderscore(
+                self.__constructSavePathOfPocScript(pocScriptUrl))
             self.__savePocScriptCodeToSpecifiedPath(pocScriptCode, pocScriptSavePath)
 
     @staticmethod
@@ -128,3 +129,8 @@ class PocInfoUpdater(object):
         fileName = fileName.replace(".", "_")
         finalFileName = prefix + fileName + suffix
         return finalFileName
+
+
+if __name__ == "__main__":
+    updater = PocInfoUpdater()
+    updater.execute()
