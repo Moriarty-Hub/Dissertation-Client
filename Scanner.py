@@ -4,6 +4,8 @@
 import os
 import pymysql
 import importlib
+import datetime
+import uuid
 
 import Constants
 
@@ -49,7 +51,6 @@ class Scanner(object):
 
     def execute(self):
         self.__deleteInactiveHostFromHostList()
-        self.__clearDatabaseContent()
         self.__scanTargetsOfSpecifiedType("url")
         self.__scanTargetsOfSpecifiedType("host")
         self.__commitModificationToDatabase()
@@ -64,10 +65,6 @@ class Scanner(object):
             file.close()
             if "0 received, 100% packet loss" in result:
                 self.__hostTargetsList.remove(target)
-
-    def __clearDatabaseContent(self):
-        deleteStatement = "DELETE FROM " + Constants.SCAN_RESULT_TABLE_NAME
-        self.__DATABASE_CURSOR.execute(deleteStatement)
 
     def __scanTargetsOfSpecifiedType(self, targetType):
         if targetType == "url":
@@ -107,13 +104,19 @@ class Scanner(object):
         return fileName[:-3]
 
     def __saveResultListOfSingleTargetIntoDatabase(self, target, targetType, resultList):
+        currentTime = datetime.datetime.now()
+        scanTime = str(currentTime.year) + "-" + str(currentTime.month) + "-" + str(currentTime.day) + " " \
+                   + str(currentTime.hour) + ":" + str(currentTime.minute)
         for result in resultList:
-            insertStatementTemplate = "INSERT INTO %s (%s, %s, %s) VALUES (\"%s\", \"%s\", \"%s\")"
+            insertStatementTemplate = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\")"
             insertStatement = insertStatementTemplate % (Constants.SCAN_RESULT_TABLE_NAME,
                                                          Constants.SCAN_RESULT_TABLE_FIELDS[0],
                                                          Constants.SCAN_RESULT_TABLE_FIELDS[1],
                                                          Constants.SCAN_RESULT_TABLE_FIELDS[2],
-                                                         target, targetType, pymysql.escape_string(str(result)))
+                                                         Constants.SCAN_RESULT_TABLE_FIELDS[3],
+                                                         Constants.SCAN_RESULT_TABLE_FIELDS[4],
+                                                         uuid.uuid1(), target, targetType, pymysql.escape_string(str(result)),
+                                                         scanTime)
             self.__DATABASE_CURSOR.execute(insertStatement)
 
     def __commitModificationToDatabase(self):
